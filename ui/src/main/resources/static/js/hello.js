@@ -17,7 +17,6 @@ angular.module('hello', ['ngRoute'])
         { authorization : "Basic " + btoa(credentials.username + ":" + credentials.password) } : {};
       $http.get('user', {headers : headers}).success(function(data) {
         if (data.name) {
-          console.log("authenticated!!");
           $rootScope.authenticated = true;
         } else {
           $rootScope.authenticated = false;

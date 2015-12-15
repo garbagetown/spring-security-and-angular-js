@@ -1,5 +1,5 @@
 angular.module('hello', ['ngRoute'])
-  .config(function($routeProvider, $httpProvider) {
+  .config(function($routeProvider) {
     $routeProvider.when('/', {
       templateUrl : 'home.html',
       controller : 'home'
@@ -8,7 +8,6 @@ angular.module('hello', ['ngRoute'])
       controller : 'navigation'
     }).otherwise('/');
 
-    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   })
   .controller('navigation', function($rootScope, $scope, $http, $location) {
 
@@ -53,15 +52,7 @@ angular.module('hello', ['ngRoute'])
     }
   })
   .controller('home', function($scope, $http) {
-    $http.get('token').success(function(token) {
-      $http({
-        url : 'http://localhost:9000',
-        method : 'GET',
-        headers : {
-          'X-Auth-Token' : token.token
-        }
-      }).success(function(data) {
-        $scope.greeting = data;
-      });
-    })
+    $http.get('http://localhost:9000').success(function(data) {
+      $scope.greeting = data;
+    });
   });

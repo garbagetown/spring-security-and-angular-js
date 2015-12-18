@@ -8,16 +8,14 @@ angular.module('hello', ['ngRoute'])
   })
   .controller('navigation', function($rootScope, $scope, $http, $location) {
 
-    $http.get('user', {headers : headers}).success(function(data) {
+    $http.get('user').success(function(data) {
       if (data.name) {
         $rootScope.authenticated = true;
       } else {
         $rootScope.authenticated = false;
       }
-      callback && callback();
     }).error(function() {
       $rootScope.authenticated = false;
-      callback && callback();
     });
 
     $scope.credentials = {};

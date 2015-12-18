@@ -6,15 +6,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.security.Principal;
 
 @SpringBootApplication
 @RestController
-@EnableAuthorizationServer
 @EnableResourceServer
-public class DemoApplication extends WebMvcConfigurerAdapter {
+@EnableAuthorizationServer
+public class DemoApplication {
 
     @RequestMapping("/user")
     public Principal user(Principal user) {

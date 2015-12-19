@@ -1,0 +1,11 @@
+zuul:
+  routes:
+    ui:
+      url: http://localhost:8081
+    resource:
+      url: http://localhost:9000
+security:
+  user:
+    password:
+      password
+  sessions: ALWAYS

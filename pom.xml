@@ -24,6 +24,7 @@
     </properties>
 
     <modules>
+        <module>gateway</module>
         <module>ui</module>
         <module>resource</module>
         <module>authserver</module>

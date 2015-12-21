@@ -27,7 +27,7 @@
         <module>gateway</module>
         <module>ui</module>
         <module>resource</module>
-        <module>authserver</module>
+        <module>admin</module>
     </modules>
 
     <dependencyManagement>

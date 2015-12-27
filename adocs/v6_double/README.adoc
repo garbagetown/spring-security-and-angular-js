@@ -1,5 +1,6 @@
 [[_multiple_ui_applications_and_a_gateway_single_page_application_with_spring_and_angular_js_part_vi]]
-= Multiple UI Applications and a Gateway
+//= Multiple UI Applications and a Gateway
+= 複数の UI アプリケーションとゲートウェイ
 
 In this section we continue <<_sso_with_oauth2_angular_js_and_spring_security_part_v,our discussion>> of how to use http://projects.spring.io/spring-security[Spring Security] with http://angularjs.org[Angular JS] in a "single page application". Here we show how to use http://projects.spring.io/spring-security-oauth/[Spring Session] together with http://projects.spring.io/spring-cloud/[Spring Cloud] to combine the features of the systems we built in parts II and IV, and actually end up building 3 single page applications with quite different responsibilities. The aim is to build a Gateway (like in <<_the_api_gateway_pattern_angular_js_and_spring_security_part_iv,part IV>>) that is used not only for API resources but also to load the UI from a backend server. We simplify the token-wrangling bits of <<_the_login_page_angular_js_and_spring_security_part_ii,part II>> by using the Gateway to pass through the authentication to the backends. Then we extend the system to show how we can make local, granular access decisions in the backends, while still controlling identity and authentication at the Gateway. This is a very powerful model for building distributed systems in general, and has a number of benefits that we can explore as we introduce the features in the code we build.
 
@@ -7,7 +8,8 @@ ____
 Reminder: if you are working through this section with the sample application, be sure to clear your browser cache of cookies and HTTP Basic credentials. In Chrome the best way to do that is to open a new incognito window.
 ____
 
-== Target Architecture
+//== Target Architecture
+== 目的とするアーキテクチャ
 
 Here's a picture of the basic system we are going to build to start with:
 
@@ -21,7 +23,8 @@ As in <<_the_api_gateway_pattern_angular_js_and_spring_security_part_iv,Part IV>
 
 The source code for the complete project we are going to build is in https://github.com/dsyer/spring-security-angular/tree/master/double[Github here], so you can just clone the project and work directly from there if you want. There is an extra component in the end state of this system ("double-admin") so ignore that for now.
 
-== Building the Backend
+//== Building the Backend
+== バックエンドの実装
 
 In this architecture the backend is very similar to the https://github.com/dsyer/spring-security-angular/tree/master/spring-session["spring-session"] sample we built in <<_the_resource_server_angular_js_and_spring_security_part_iii,Part III>>, with the exception that it doesn't actually need a login page. The easiest way to get to what we want here is probably to copy the "resource" server from Part III and take the UI from the https://github.com/dsyer/spring-security-angular/tree/master/basic["basic"] sample in <<_spring_and_angular_js_a_secure_single_page_application,Part I>>. To get from the "basic" UI to the one we want here, we need only to add a couple of dependencies (like when we first used https://github.com/spring-projects/spring-session/[Spring Session] in Part III):
 
@@ -67,7 +70,8 @@ security.sessions: NEVER
 
 If that's the _whole_ content `application.properties` then the application will be secure and accessible to a user called "user" with a password that is random, but printed on the console (at log level INFO) on startup. The "security.sessions" setting means that Spring Security will accept cookies as authentication tokens but won't create them unless they already exist.
 
-== The Resource Server
+//== The Resource Server
+== リソースサーバ
 
 The Resource server is easy to generate from one of our existing samples. It is the same as the "spring-session" Resource server in <<_the_resource_server_angular_js_and_spring_security_part_iii,Part III>>: just a "/resource" endpoint and `@EnableRedisHttpSession` to get the distributed session data. We want this server to have a non-default port to listen on, and we want to be able to look up authentication in the session so we need this (in `application.properties`):
 
@@ -80,7 +84,8 @@ security.sessions: NEVER
 
 The completed sample is https://github.com/dsyer/spring-security-angular/tree/master/double/resource[here in github] if you want to take a peek.
 
-== The Gateway
+//== The Gateway
+== ゲートウェイ
 
 For an initial implementation of a Gateway (the simplest thing that could possibly work) we can just take an empty Spring Boot web application and add the `@EnableZuulProxy` annotation. As we saw in <<_spring_and_angular_js_a_secure_single_page_application,Part I>> there are several ways to do that, and one is to use the http://start.spring.io[Spring Initializr] to generate a skeleton project. Even easier, is to use the http://cloud-start.spring.io[Spring Cloud Initializr] which is the same thing, but for http://cloud.spring.io[Spring Cloud] applications. Using the same sequence of command line operations as in Part I:
 
@@ -131,7 +136,8 @@ security:
 
 There are 2 routes in the proxy, one each for the UI and resource server, and we have set up a default password and a session persistence strategy (telling Spring Security to always create a session on authentication). This last bit is important because we want authentication and therefore sessions to be managed in the Gateway.
 
-== Up and Running
+//== Up and Running
+== 起動と実行
 
 We now have three components, running on 3 ports. If you point the browser at http://localhost:8080/ui/[http://localhost:8080/ui/] you should get an HTTP Basic challenge, and you can authenticate as "user/password" (your credentials in the Gateway), and once you do that you should see a greeting in the UI, via a backend call through the proxy to the Resource server.
 
@@ -153,7 +159,8 @@ You might not see the 401 because the browser treats the home page load as a sin
 
 Hurrah, it works! You have two backend servers, one of which is a UI, each with independent capabilities and able to be tested in isolation, and they are connected together with a secure Gateway that you control and for which you have configured the authentication. If the backends are not accessible to the browser it doesn't matter (in fact it's probably an advantage because it gives you yet more control over physical security).
 
-== Adding a Login Form
+//== Adding a Login Form
+== ログインフォームの追加
 
 Just as in the "basic" sample in <<_spring_and_angular_js_a_secure_single_page_application,Part I>> we can now add a login form to the Gateway, e.g. by copying the code from <<_the_login_page_angular_js_and_spring_security_part_ii,Part II>>. When we do that we can also add some basic navigation elements in the Gateway, so the user doesn't have to know the path to the UI backend in the proxy. So let's first copy the static assets from the "single" UI into the Gateway, delete the message rendering and insert a login form into our home page (in the `<body/>` somewhere):
 
@@ -262,7 +269,8 @@ If we run this enhanced Gateway, instead of having to remember the URL for the U
 
 image:https://raw.githubusercontent.com/dsyer/spring-security-angular/master/double/home.png[Home Page]
 
-== Granular Access Decisions in the Backend
+//== Granular Access Decisions in the Backend
+== バックエンドにおける細かいアクセス判定
 
 Up to now our application is functionally very similar to the one in <<_the_resource_server_angular_js_and_spring_security_part_iii,Part III>> or <<_the_api_gateway_pattern_angular_js_and_spring_security_part_iv,Part IV>>, but with an additional dedicated Gateway. The advantage of the extra layer may not be yet apparent, but we can emphasise it by expanding the system a bit. Suppose we want to use that Gateway to expose another backend UI, for users to "administrate" the content in the main UI, and that we want to restrict access to this feature to users with special roles. So we will add an "Admin" application behind the proxy, and the system will look like this:
 
@@ -413,7 +421,8 @@ public class AdminApplication {
 
 NOTE: the role names come back from the "/user" endpoint with the "ROLE_" prefix so we can distinguish them from other kinds of authorities (it's a Spring Security thing). Thus the "ROLE_" prefix is needed in the JavaScript, but not in the Spring Security configuration, where it is clear from the method names that "roles" are the focus of the operations.
 
-== Changes in the Gateway to Support Admin UI
+//== Changes in the Gateway to Support Admin UI
+== Admin UI をサポートするようゲートウェイを変更する
 
 We are going to use the roles to make access decisions in the Gateway as well (so we can conditionally display a link to the admin UI), so we should add the "roles" to the "/user" endpoint in the Gateway as well. Once that is in place we can add some JavaScript to set up a flag to indicate that the current user is an "ADMIN". In the `authenticated()` function:
 
@@ -471,7 +480,8 @@ and then in the HTML we can conditionally show a new link:
 
 Run all the apps and go to http://localhost:8080 to see the result. Everything should be working fine, and the UI should change depending on the currently authenticated user.
 
-== Why are we Here?
+//== Why are we Here?
+== どうしてこうなった?
 
 Now we have a nice little system with 2 independent user interfaces and a backend Resource server, all protected by the same authentication in a Gateway. The fact that the Gateway acts as a micro-proxy makes the implementation of the backend security concerns extremely simple, and they are free to concentrate on their own business concerns. The use of Spring Session has (again) avoided a huge amount of hassle and potential errors.
 

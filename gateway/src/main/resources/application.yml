@@ -7,9 +7,6 @@ zuul:
     resource:
       url: http://localhost:9000
 security:
-  user:
-    password:
-      password
   sessions: ALWAYS
 spring:
   redis:

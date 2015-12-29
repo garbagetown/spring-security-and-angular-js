@@ -12,13 +12,17 @@ function($scope, $http) {
       authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)
     } : {};
 
+    $scope.user = ''
     $http.get('user', {
       headers: headers
     }).success(function(data) {
       if (data.name) {
         $scope.authenticated = true;
+        $scope.user = data.name
+        $scope.admin = data && data.roles && data.roles.indexOf("ROLE_ADMIN")>0;
       } else {
         $scope.authenticated = false;
+        $scope.admin = false;
       }
       callback && callback();
     }).error(function() {
@@ -46,7 +50,7 @@ function($scope, $http) {
   };
 
   $scope.logout = function() {
-    $http.post('logout', {}).succeess(function() {
+    $http.post('logout', {}).success(function() {
       $scope.authenticated = false;
       $scope.admin = false;
     }).error(function() {

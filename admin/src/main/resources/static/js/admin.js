@@ -18,5 +18,16 @@ function($scope, $http) {
 			$scope.authenticated = false;
 		}
 		$scope.error = null
+	}).error(function(response) {
+        if (response.status === 0) {
+            $scope.error = 'No connection. Verify application is running.';
+        } else if (response.status == 401) {
+            $scope.error = 'Unauthorized.';
+        } else if (response.status == 403) {
+            $scope.error = 'Forbidden.';
+        } else {
+            $scope.error = 'Unknown.';
+        }
+        $scope.authenticated = false;
 	});
 });

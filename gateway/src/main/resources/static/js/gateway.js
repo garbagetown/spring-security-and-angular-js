@@ -1,9 +1,17 @@
-angular.module('gateway', []).controller('navigation',
+angular.module('gateway', []).config(function($httpProvider) {
+
+  $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+}).controller('navigation',
+
 function($scope, $http) {
+
   var authenticate = function(credentials, callback) {
+
     var headers = credentials ? {
       authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)
     } : {};
+
     $http.get('user', {
       headers: headers
     }).success(function(data) {
@@ -35,5 +43,16 @@ function($scope, $http) {
         $scope.authenticated = false;
       }
     })
+  };
+
+  $scope.logout = function() {
+    $http.post('logout', {}).succeess(function() {
+      $scope.authenticated = false;
+      $scope.admin = false;
+    }).error(function() {
+      console.log("Logout failed");
+      $scope.authenticated = false;
+      $scope.admin = false;
+    });
   };
 });

@@ -30,4 +30,11 @@ function($scope, $http) {
         }
         $scope.authenticated = false;
 	});
+
+	$scope.update = function() {
+	    console.log($scope.greeting.content)
+	    $http.post('/resource/', {content : $scope.greeting.content}).success(function(data) {
+	        $scope.greeting = data;
+	    });
+	}
 });

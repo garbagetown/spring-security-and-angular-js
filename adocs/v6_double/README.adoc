@@ -295,8 +295,8 @@ The fact that the existing UI is available to users in the "USER" role is indica
 
 In addition, suppose that within the Admin application we want to distinguish between "READER" and "WRITER" roles, so that we can permit (let's say) users who are auditors to view the changes made by the main admin users. This is a granular access decision, where the rule is only known, and should only be known, in the backend application. In the Gateway we only need to ensure that our user accounts have the roles needed, and this information is available, but the Gateway doesn't need to know how to interpret it. In the Gateway we create user accounts to keep the sample application self-contained:
 
-.SecurityConfiguration.class
-[source,javascript]
+.SecurityConfiguration.java
+[source,java]
 ----
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -316,9 +316,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 where the "admin" user has been enhanced with 3 new roles ("ADMIN", "READER" and "WRITER") and we have also added an "audit" user with "ADMIN" access, but not "WRITER".
 
-TIP: In a production system the user account data would be managed in a backend database (most likely a directory service), not hard coded in the Spring Configuration. Sample applications connecting to such a database are easy to find on the internet, for example in the https://github.com/spring-projects/spring-security/tree/master/samples[Spring Security Samples].
+//TIP: In a production system the user account data would be managed in a backend database (most likely a directory service), not hard coded in the Spring Configuration. Sample applications connecting to such a database are easy to find on the internet, for example in the https://github.com/spring-projects/spring-security/tree/master/samples[Spring Security Samples].
+TIP: 本番環境では、ユーザアカウントデータは (多くの場合、ディレクトリサービスのような) バックエンドデータベースで管理されており、Spring Configuration にハードコードされることはないでしょう。このようなデータベースに接続するサンプルアプリケーションは、例えば https://github.com/spring-projects/spring-security/tree/master/samples[Spring Security Samples]  のように、インターネット上で簡単に見つけることができます。
 
-The access decisions go in the Admin application. For the "ADMIN" role (which is required globally for this backend) we do it in Spring Security:
+//The access decisions go in the Admin application. For the "ADMIN" role (which is required globally for this backend) we do it in Spring Security:
+このアクセス制御は Admin アプリケーションで行います。(このバックエンド全体で必要とされる) "ADMIN" ロールに対して、以下のように Spring Security を設定します:
 
 .SecurityConfiguration.java
 [source,java]

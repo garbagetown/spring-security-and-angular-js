@@ -37,4 +37,8 @@ function($scope, $http) {
 	        $scope.greeting = data;
 	    });
 	}
+
+    $scope.home = function() {
+        computeDefaultTemplate($scope.user);
+    }
 });

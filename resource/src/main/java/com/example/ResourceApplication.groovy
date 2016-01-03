@@ -38,6 +38,11 @@ class ResourceApplication extends WebSecurityConfigurerAdapter {
         [id: UUID.randomUUID().toString(), content: message]
     }
 
+    @RequestMapping(value='/changes', method=RequestMethod.GET)
+    def changes() {
+        changes
+    }
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable()

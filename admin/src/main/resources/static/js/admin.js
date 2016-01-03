@@ -41,4 +41,11 @@ function($scope, $http) {
     $scope.home = function() {
         computeDefaultTemplate($scope.user);
     }
+
+    $scope.changes = function() {
+        $scope.template = "changes.html";
+        $http.get('/resource/changes').success(function(data) {
+            $scope.data = data;
+        })
+    }
 });

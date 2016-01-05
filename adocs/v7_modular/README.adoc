@@ -1,9 +1,11 @@
-= Modular AngularJS Application
+//= Modular AngularJS Application
+= AngularJS アプリケーションのモジュール化
 
 In this section we continue <<_spring_and_angular_js_a_secure_single_page_application,our discussion>> of how to use http://projects.spring.io/spring-security[Spring Security] with http://angularjs.org[Angular JS] in a "single page application". Here we show how to modularize the client-side code, and how to use "nice" URL paths without the fragment notation (e.g. "/#/login") which Angular uses by default, but most users dislike. This is the seventh section of a tutorial, and you can catch up on the basic building blocks of the application or build it from scratch by reading the <<_spring_and_angular_js_a_secure_single_page_application,first section>>, or you can just go straight to the https://github.com/dsyer/spring-security-angular/tree/master/modular[source code in Github]. We will be able to tidy up a lot of loose ends from the JavaScript code of the rest of this series, and at the same time show how it can fit very snugly against a backend server built from Spring Security and Spring Boot.
 
 [[breaking-up-the-application]]
-== Breaking up the Application
+//== Breaking up the Application
+== アプリケーションの分割
 
 The sample application that we worked with so far in this series was trivial enough that we could get away with a single JavaScript source file for the whole thing. No larger application will ever end up that way, even if it starts out life like this one, so to mimic real life in a sample we are going to break things up. A good starting point would be to take the "single" application from the <<_the_login_page_angular_js_and_spring_security_part_ii,second section>> and have a look at its structure in the source code. Here's a directory listing for the static content (excluding the "application.yml" that belongs on the server):
 
@@ -116,7 +118,8 @@ Notice how the "hello" module _depends on_ the other two by listing them in the 
 This is the Angular JS dependency management system in action. Other frameworks have similar (and arguably superior) features. Also, in a larger application, you might use a build time step to bundle all the JavaScript together so it can be loaded efficiently by the browser, but that's almost a matter of taste.
 
 [[using-natural-routes]]
-== Using "Natural" Routes
+//== Using "Natural" Routes
+== "自然な" ルートを使う
 
 The Angular `$routeProvider` by default works with fragment locators in the URL path, e.g. the login page is specified as a route in `hello.js` as "/login" and this translates into "/#/login" in the actual URL (the one you see in the browser window). This is so that the JavaScript in the `index.html`, loaded via the root path "/", stays active on all routes. The fragment naming is a bit unfamiliar to users and it is sometimes more convenient to use "natural" routes, where the URL path is the same as the Angular route declarations, e.g. "/login" for "/login".  You can't do that if you have _only_ static resources, because `index.html` can only be loaded one way, but if you have some active components in the stack (a proxy or some server-side logic) then you can arrange for it to work by loading `index.html` from all the Angular routes.
 
@@ -172,7 +175,8 @@ Coupled with that you need an extra `<base/>` element in the header of the HTML 
 Angular uses the `<base/>` element to anchor the routes and write the URLs that show up in the browser. You are running in a Spring Boot application so the default setting is to serve from root path "/" (on port 8080). If you need to be able to serve from different root paths with the same application then you will need to render that path into the HTML using a server-side template (many people prefer to stick with static resources for a Single Page Application, so they are stuck with a static root path).
 
 [[extracting-the-authentication-concerns]]
-== Extracting the Authentication Concerns
+//== Extracting the Authentication Concerns
+== 認証関連を抽出する
 
 When you modularized the application above you should have found that the code worked just by splitting it into modules, but there is a small niggle there that we are still using `$rootScope` to share state between the controllers. There's nothing horribly wrong with that for such a small application and it got us a decent prototype to play with quite quickly, so let's not be too sad about it, but now we can take the opportunity to extract all the authentication concerns into a separate module. In Angular terms what you need is a "service", so create a new module ("auth") next to your "home" and "navigation" modules:
 
@@ -355,7 +359,8 @@ The very last change is to the `index.html` so that the "logout" link is hidden 
 You simply need to convert the flag `authenticated` to a function call `authenticated()`, so that the "navigation" controller can reach into the "auth" service and find the value of the flag, now that it is not in `$rootScope`.
 
 [[redirecting-to-the-login-page]]
-== Redirecting to the Login Page
+//== Redirecting to the Login Page
+== Login ページにリダイレクトする
 
 The way we have implemented our home page up to now it has some content it can display when the user is anauthenticated (it just invites them to log in). Some applications work that way, and some don't. Some provide a different user experience where the user never sees anything apart from the login page until he is authenticated, so let's see how we might convert our application to this pattern.
 
@@ -444,6 +449,7 @@ Reminder: be sure to clear your browser cache of cookies and HTTP Basic credenti
 ____
 
 [[conclusion]]
-== Conclusion
+//== Conclusion
+== 結論
 
 In this section we have seen how to modularize an Angular application (taking as a starting point the application from <<_the_login_page_angular_js_and_spring_security_part_ii,section two>> of the tutorial), how to make it redirect to a login page, and how to use "natural" routes that can be typed or bookmarked easily by users. We took a step back from the last couple of sections in the tutorial, concentrating on the client-side code a bit more, and temporarily ditching the distributed architecture that we were building in Sections III-VI. That doesn't mean that the changes here can't be applied to those other applications (actually it's fairly trivial) - it was just to simplify the server-side code while we were learning how to do things on the client. There _were_ a couple of server-side features that we used or discussed briefly though (for instance the use of a "forward" view in Spring MVC to enable "natural" routes), so we have continued the theme of Angular and Spring working together, and shown that they do so quite well with small tweaks here and there.

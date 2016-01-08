@@ -1,18 +1,14 @@
-angular.module('hello', []).controller('home',
+angular.module('hello', [ 'ngRoute', 'home', 'navigation' ])).config(
 
-function($scope, $http) {
+function($routeProvider, $httpProvider) {
 
-    $http.get('user').success(function(data) {
-        if (data.name) {
-			$scope.authenticated = true;
-			$scope.user = data.name
-			$http.get('/resource/').success(function(data) {
-			    $scope.greeting = data;
-			})
-        } else {
-            $scope.authenticated = false;
-        }
-    }).error(function() {
-        $scope.authenticated = false;
-    })
+    $routeProvider.when('/', {
+        templateUrl: 'js/home/home.html',
+        controller: 'home'
+    }).when('/login', {
+        templateUrl: 'js/navigation/login.html',
+        controller: 'navigation'
+    }).otherwise('/');
+
+    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 });

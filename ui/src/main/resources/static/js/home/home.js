@@ -1,4 +1,4 @@
-angular.module('hello', []).controller('home',
+angular.module('home', []).controller('home',
 
 function($scope, $http) {
 

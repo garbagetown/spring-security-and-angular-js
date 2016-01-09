@@ -2,16 +2,19 @@ package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
 @SpringBootApplication
-@RestController
-@EnableRedisHttpSession
+@Controller
 public class UiApplication {
+
+    @RequestMapping("/{[path:[^\\.]*}")
+    public String redirect() {
+        return "forward:/";
+    }
 
     @RequestMapping("/user")
     public Principal user(Principal user) {

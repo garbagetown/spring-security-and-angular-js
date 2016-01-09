@@ -1,6 +1,8 @@
-angular.module('hello', [ 'ngRoute', 'home', 'navigation' ])).config(
+angular.module('hello', [ 'ngRoute', 'home', 'navigation' ]).config(
 
-function($routeProvider, $httpProvider) {
+function($routeProvider, $httpProvider, $locationProvider) {
+
+    $locationProvider.html5Mode(true);
 
     $routeProvider.when('/', {
         templateUrl: 'js/home/home.html',

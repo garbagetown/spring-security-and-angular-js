@@ -1,4 +1,4 @@
-angular.module('hello', [ 'ngRoute', 'home', 'navigation' ]).config(
+angular.module('hello', [ 'ngRoute', 'auth', 'home', 'navigation' ]).config(
 
 function($routeProvider, $httpProvider, $locationProvider) {
 
@@ -13,4 +13,7 @@ function($routeProvider, $httpProvider, $locationProvider) {
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+}).run(function(auth) {
+    auth.init('/', '/login', '/logout');
 });

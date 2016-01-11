@@ -2,6 +2,15 @@ angular.module('auth', []).factory('auth',
 
 function($rootScope, $http, $location) {
 
+    enter = function() {
+        if ($location.path() != auth.loginPath) {
+            auth.path = $location.path;
+            if (!auth.authenticated) {
+                $location.path(auth.loginPath);
+            }
+        }
+    }
+
     var auth = {
 
         authenticated : false,
@@ -42,6 +51,16 @@ function($rootScope, $http, $location) {
             auth.homePath = homePath;
             auth.loginPath = loginPath;
             auth.logoutPath = logoutPath;
+
+            auth.authenticate({}, function(authenticated) {
+                if (authenticated) {
+                    $location.path(auth.path);
+                }
+            });
+
+            $rootScope.$on('$routeChangeStart', function() {
+                enter();
+            });
         }
     };
 

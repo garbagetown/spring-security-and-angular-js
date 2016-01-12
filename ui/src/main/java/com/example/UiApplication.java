@@ -25,6 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @SpringBootApplication
 @Controller
@@ -41,6 +44,15 @@ public class UiApplication {
         return user;
     }
 
+    @RequestMapping("/resource")
+    @ResponseBody
+    public Map<String, Object> home() {
+        Map<String, Object> model = new HashMap<>();
+        model.put("id", UUID.randomUUID().toString());
+        model.put("content", "Hello World");
+        return model;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(UiApplication.class, args);
     }
@@ -53,7 +65,7 @@ public class UiApplication {
             http
                 .httpBasic()
             .and()
-                .authorizeRequests().antMatchers("/index.html", "/", "/login", "/home").permitAll()
+                .authorizeRequests().antMatchers("/index.html", "/", "/login", "/message", "/home").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .csrf().csrfTokenRepository(csrfTokenRepositorh())

@@ -1,18 +1,21 @@
 package com.example;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = UiApplication.class)
-@WebAppConfiguration
+@SpringBootApplication
+@Controller
 public class UiApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+    @RequestMapping("/")
+    public String home() {
+        return "forward:/test.html";
+    }
 
+	public static void main(String[] args) {
+		new SpringApplicationBuilder(UiApplicationTests.class).properties(
+				"server.port=9999", "security.basic.enabled=false").run(args);
+	}
 }

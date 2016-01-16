@@ -8,6 +8,9 @@ describe("App", function() {
     }));
 
     it("loads a controller", function() {
-        var controller = $controller('home');
+        var $scope = {};
+        var controller = $controller('home', {
+            $scope : $scope
+        });
     });
 })
